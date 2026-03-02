@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="4fdff1a9a4e04998b722e86aee1c8378" Name="Diagram1">
+        <EntityTypeShape EntityType="StudentTestingDBModel.Answers" Width="1.5" PointX="12.75" PointY="4.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.Questions" Width="1.5" PointX="10.5" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.Roles" Width="1.5" PointX="0.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.Subjects" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.TestResults" Width="1.5" PointX="5.25" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.Tests" Width="1.5" PointX="8.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.UserAnswers" Width="1.5" PointX="15" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.Users" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__Answers__Questio__6383C8BA" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__UserAnswe__Answe__6D0D32F4" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__Questions__TestI__5EBF139D" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__UserAnswe__Quest__6C190EBB" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__Users__RoleID__4F7CD00D" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__Tests__SubjectID__5812160E" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__TestResul__TestI__6754599E" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__TestResul__UserI__66603565" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__UserAnswe__Resul__6B24EA82" ManuallyRouted="false" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__Tests__CreatedBy__59063A47" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
