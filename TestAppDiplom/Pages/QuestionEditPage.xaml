@@ -1,0 +1,167 @@
+﻿<Page x:Class="TestAppDiplom.Pages.QuestionEditPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TestAppDiplom.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="Редактирование вопроса">
+
+    <Grid Background="#F0F0F0">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <Border Grid.Row="0" Background="#007BFF" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" x:Name="txtTitle" 
+                           FontSize="18" FontWeight="Bold" Foreground="White"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="btnSave" Content="Сохранить" 
+                            Background="#28A745" Foreground="White"
+                            Padding="15,8" Margin="0,0,10,0" Cursor="Hand"
+                            Click="btnSave_Click"/>
+                    <Button x:Name="btnCancel" Content="Отмена" 
+                            Background="#6C757D" Foreground="White"
+                            Padding="15,8" Cursor="Hand"
+                            Click="btnCancel_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Основной контент -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20">
+
+                <!-- Информация о вопросе -->
+                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Информация о вопросе" 
+                                   FontSize="16" FontWeight="Bold" 
+                                   Foreground="#007BFF" Margin="0,0,0,15"/>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" 
+                                       Text="Текст вопроса:" VerticalAlignment="Top"/>
+                            <TextBox x:Name="txtQuestionText" Grid.Row="0" Grid.Column="1" 
+                                     Height="80" Padding="5" TextWrapping="Wrap" 
+                                     AcceptsReturn="True" Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" 
+                                       Text="Тип вопроса:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="cmbQuestionType" Grid.Row="1" Grid.Column="1" 
+                                      Height="30" Margin="0,0,0,10"
+                                      SelectionChanged="cmbQuestionType_SelectionChanged">
+                                <ComboBoxItem Tag="1" Content="Один вариант ответа" IsSelected="True"/>
+                                <ComboBoxItem Tag="2" Content="Несколько вариантов ответа"/>
+                            </ComboBox>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" 
+                                       Text="Баллы:" VerticalAlignment="Center"/>
+                            <TextBox x:Name="txtPoints" Grid.Row="2" Grid.Column="1" 
+                                     Height="30" Padding="5" Text="1" Margin="0,0,0,10"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Варианты ответов -->
+                <Border Background="White" CornerRadius="10" Padding="20">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="Варианты ответов" 
+                                       FontSize="16" FontWeight="Bold" 
+                                       Foreground="#007BFF" Margin="0,0,0,15"/>
+
+                            <Button Grid.Column="1" x:Name="btnAddAnswer" 
+                                    Content="+ Добавить ответ" Background="#28A745" 
+                                    Foreground="White" Padding="10,5" Cursor="Hand"
+                                    Click="btnAddAnswer_Click"/>
+                        </Grid>
+
+                        <ItemsControl x:Name="icAnswers" Margin="0,10,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <CheckBox Grid.Column="0" 
+                                                      x:Name="chkIsCorrect" 
+                                                      IsChecked="{Binding IsCorrect}"
+                                                      Margin="0,0,10,0"
+                                                      Checked="chkIsCorrect_Checked"
+                                                      Unchecked="chkIsCorrect_Checked"/>
+
+                                            <TextBox Grid.Column="1" 
+                                                     x:Name="txtAnswerText"
+                                                     Text="{Binding AnswerText}"
+                                                     Height="30" Padding="5"
+                                                     Margin="0,0,10,0"
+                                                     TextChanged="txtAnswerText_TextChanged"/>
+
+                                            <Button x:Name="btnMoveAnswerUp" Grid.Column="2" 
+                                                    Content="↑" Background="#FFC107" 
+                                                    Foreground="White" Width="30" Height="30"
+                                                    Margin="0,0,5,0" Cursor="Hand"
+                                                    Tag="{Binding AnswerID}"
+                                                    Click="btnMoveAnswerUp_Click"/>
+
+                                            <Button x:Name="btnMoveAnswerDown" Grid.Column="3" 
+                                                    Content="↓" Background="#17A2B8" 
+                                                    Foreground="White" Width="30" Height="30"
+                                                    Margin="0,0,5,0" Cursor="Hand"
+                                                    Tag="{Binding AnswerID}"
+                                                    Click="btnMoveAnswerDown_Click"/>
+
+                                            <Button x:Name="btnDeleteAnswer" Grid.Column="4" 
+                                                    Content="✖" Background="#DC3545" 
+                                                    Foreground="White" Width="30" Height="30"
+                                                    Cursor="Hand" Tag="{Binding AnswerID}"
+                                                    Click="btnDeleteAnswer_Click"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <TextBlock x:Name="txtNoAnswers" 
+                                   Text="Нет добавленных ответов" 
+                                   Foreground="Gray" HorizontalAlignment="Center"
+                                   Visibility="Visible" Margin="20"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

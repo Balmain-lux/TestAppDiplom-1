@@ -1,0 +1,166 @@
+﻿<Page x:Class="TestAppDiplom.Pages.StudentMainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TestAppDiplom.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="Студент - Главная">
+
+    <Grid Background="#F0F0F0">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <Border Grid.Row="0" Background="#007BFF" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Панель студента" 
+                           FontSize="20" FontWeight="Bold" Foreground="White"
+                           VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock x:Name="txtUserInfo" Text="Пользователь" 
+                               FontSize="14" Foreground="White" 
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <Button x:Name="btnLogout" Content="Выйти" 
+                            Background="White" Foreground="#007BFF" 
+                            Padding="10,5" Click="btnLogout_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Основной контент -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20">
+
+                <!-- Доступные тесты -->
+                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Доступные тесты" FontSize="18" FontWeight="Bold" 
+                                   Foreground="#007BFF" Margin="0,0,0,15"/>
+
+                        <ListView x:Name="lvAvailableTests" 
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding TestName}" 
+                                                           FontSize="16" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding Description}" 
+                                                           Foreground="Gray" Margin="0,5"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                    <TextBlock Text="Предмет: " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding Subject.SubjectName}" 
+                                                               Foreground="#007BFF" Margin="0,0,15,0"/>
+                                                    <TextBlock Text="Время: " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding TimeLimit, StringFormat='{} {0} мин'}" 
+                                                               Foreground="#007BFF"/>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <Button x:Name="btnStartTest" Grid.Column="1" Content="Начать тест" 
+                                                    Background="#28A745" Foreground="White"
+                                                    Padding="15,5" Margin="10,0" Cursor="Hand"
+                                                    Tag="{Binding TestID}" 
+                                                    Click="btnStartTest_Click"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <TextBlock x:Name="txtNoAvailableTests" 
+                                   Text="Нет доступных тестов" 
+                                   Foreground="Gray" HorizontalAlignment="Center"
+                                   Visibility="Collapsed" Margin="20"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Решенные тесты -->
+                <Border Background="White" CornerRadius="10" Padding="20">
+                    <StackPanel>
+                        <TextBlock Text="Мои результаты" FontSize="18" FontWeight="Bold" 
+                                   Foreground="#007BFF" Margin="0,0,0,15"/>
+
+                        <ListView x:Name="lvCompletedTests" 
+                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                  BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <StackPanel Grid.Column="0">
+                                                <TextBlock Text="{Binding Test.TestName}" 
+                                                           FontSize="16" FontWeight="SemiBold"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                    <TextBlock Text="Дата: " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding EndTime, StringFormat='dd.MM.yyyy HH:mm'}" 
+                                                               Foreground="#007BFF" Margin="0,0,15,0"/>
+                                                    <TextBlock Text="Результат: " Foreground="Gray"/>
+                                                    <TextBlock x:Name="txtPercentage" 
+                                                               Text="{Binding PercentageScore, StringFormat='{}{0:F1}%'}" 
+                                                               FontWeight="Bold"
+                                                               Loaded="txtPercentage_Loaded"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="Баллы: " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding Score}" Foreground="#007BFF"/>
+                                                    <TextBlock Text=" из " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding MaxScore}" Foreground="#007BFF"/>
+                                                    <TextBlock Text=" (проходной: " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding Test.PassingScore}" Foreground="#007BFF"/>
+                                                    <TextBlock Text="%)" Foreground="Gray"/>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                <TextBlock x:Name="txtStatus" 
+                                                           Text="{Binding IsPassed}" 
+                                                           VerticalAlignment="Center" FontWeight="Bold"
+                                                           Margin="0,0,15,0"
+                                                           Loaded="txtStatus_Loaded"/>
+                                                <Button x:Name="btnViewResult" Content="Просмотр" 
+                                                        Background="#007BFF" Foreground="White"
+                                                        Padding="15,5" Cursor="Hand"
+                                                        Tag="{Binding ResultID}" 
+                                                        Click="btnViewResult_Click"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <TextBlock x:Name="txtNoCompletedTests" 
+                                   Text="Вы еще не прошли ни одного теста" 
+                                   Foreground="Gray" HorizontalAlignment="Center"
+                                   Visibility="Collapsed" Margin="20"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

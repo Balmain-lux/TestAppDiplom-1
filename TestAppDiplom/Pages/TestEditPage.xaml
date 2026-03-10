@@ -1,0 +1,175 @@
+﻿<Page x:Class="TestAppDiplom.Pages.TestEditPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TestAppDiplom.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="Редактирование теста">
+
+    <Grid Background="#F0F0F0">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <Border Grid.Row="0" Background="#007BFF" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" x:Name="txtTitle" 
+                           FontSize="18" FontWeight="Bold" Foreground="White"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="btnSave" Content="Сохранить" 
+                            Background="#28A745" Foreground="White"
+                            Padding="15,8" Margin="0,0,10,0" Cursor="Hand"
+                            Click="btnSave_Click"/>
+                    <Button x:Name="btnCancel" Content="Отмена" 
+                            Background="#6C757D" Foreground="White"
+                            Padding="15,8" Cursor="Hand"
+                            Click="btnCancel_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Основной контент -->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Margin="20">
+
+                <!-- Основная информация о тесте -->
+                <Border Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,20">
+                    <StackPanel>
+                        <TextBlock Text="Основная информация" 
+                                   FontSize="16" FontWeight="Bold" 
+                                   Foreground="#007BFF" Margin="0,0,0,15"/>
+
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Row="0" Grid.Column="0" 
+                                       Text="Название:" VerticalAlignment="Center"/>
+                            <TextBox x:Name="txtTestName" Grid.Row="0" Grid.Column="1" 
+                                     Height="30" Padding="5" Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="1" Grid.Column="0" 
+                                       Text="Предмет:" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="cmbSubject" Grid.Row="1" Grid.Column="1" 
+                                      Height="30" Margin="0,0,0,10"
+                                      DisplayMemberPath="SubjectName" SelectedValuePath="SubjectID"/>
+
+                            <TextBlock Grid.Row="2" Grid.Column="0" 
+                                       Text="Описание:" VerticalAlignment="Top"/>
+                            <TextBox x:Name="txtDescription" Grid.Row="2" Grid.Column="1" 
+                                     Height="60" Padding="5" TextWrapping="Wrap" 
+                                     AcceptsReturn="True" Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="3" Grid.Column="0" 
+                                       Text="Время (мин):" VerticalAlignment="Center"/>
+                            <TextBox x:Name="txtTimeLimit" Grid.Row="3" Grid.Column="1" 
+                                     Height="30" Padding="5" Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="4" Grid.Column="0" 
+                                       Text="Проходной балл (%):" VerticalAlignment="Center"/>
+                            <TextBox x:Name="txtPassingScore" Grid.Row="4" Grid.Column="1" 
+                                     Height="30" Padding="5" Margin="0,0,0,10"/>
+
+                            <TextBlock Grid.Row="5" Grid.Column="0" 
+                                       Text="Активен:" VerticalAlignment="Center"/>
+                            <CheckBox x:Name="chkIsActive" Grid.Row="5" Grid.Column="1" 
+                                      Margin="0,5,0,10" IsChecked="True"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Вопросы -->
+                <Border Background="White" CornerRadius="10" Padding="20">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="Вопросы" 
+                                       FontSize="16" FontWeight="Bold" 
+                                       Foreground="#007BFF" Margin="0,0,0,15"/>
+
+                            <Button Grid.Column="1" x:Name="btnAddQuestion" 
+                                    Content="+ Добавить вопрос" Background="#28A745" 
+                                    Foreground="White" Padding="10,5" Cursor="Hand"
+                                    Click="btnAddQuestion_Click"/>
+                        </Grid>
+
+                        <ListView x:Name="lvQuestions" BorderThickness="0">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="10">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto"/>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" 
+                                                       Text="{Binding QuestionNumber}" 
+                                                       FontWeight="Bold" Margin="0,0,10,0"/>
+
+                                            <StackPanel Grid.Column="1">
+                                                <TextBlock Text="{Binding QuestionText}" 
+                                                           FontWeight="SemiBold"/>
+                                                <StackPanel Orientation="Horizontal" Margin="0,5">
+                                                    <TextBlock Text="Тип: " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding QuestionTypeName}" 
+                                                               Foreground="#007BFF" Margin="0,0,15,0"/>
+                                                    <TextBlock Text="Баллы: " Foreground="Gray"/>
+                                                    <TextBlock Text="{Binding Points}" 
+                                                               Foreground="#007BFF"/>
+                                                </StackPanel>
+                                            </StackPanel>
+
+                                            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                                                <Button x:Name="btnEditQuestion" Content="Ред." 
+                                                        Background="#FFC107" Foreground="White"
+                                                        Padding="10,3" Margin="0,0,5,0" Cursor="Hand"
+                                                        Tag="{Binding QuestionID}" 
+                                                        Click="btnEditQuestion_Click"/>
+                                                <Button x:Name="btnDeleteQuestion" Content="Удал." 
+                                                        Background="#DC3545" Foreground="White"
+                                                        Padding="10,3" Cursor="Hand"
+                                                        Tag="{Binding QuestionID}" 
+                                                        Click="btnDeleteQuestion_Click"/>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <TextBlock x:Name="txtNoQuestions" 
+                                   Text="Нет добавленных вопросов" 
+                                   Foreground="Gray" HorizontalAlignment="Center"
+                                   Visibility="Collapsed" Margin="20"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+    </Grid>
+</Page>

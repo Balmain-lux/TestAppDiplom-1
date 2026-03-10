@@ -1,0 +1,221 @@
+﻿<Page x:Class="TestAppDiplom.Pages.AdminMainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TestAppDiplom.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="800"
+      Title="Администратор -  Главная">
+
+    <Grid Background="#F0F0F0">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Верхняя панель -->
+        <Border Grid.Row="0" Background="#007BFF" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="Панель администратора" 
+                           FontSize="20" FontWeight="Bold" Foreground="White"
+                           VerticalAlignment="Center"/>
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <TextBlock x:Name="txtUserInfo" Text="Пользователь" 
+                               FontSize="14" Foreground="White" 
+                               VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <Button x:Name="btnLogout" Content="Выйти" 
+                            Background="White" Foreground="#007BFF" 
+                            Padding="10,5" Click="btnLogout_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Основной контент -->
+        <TabControl Grid.Row="1" Margin="20" Background="White">
+            <!-- Вкладка пользователей -->
+            <TabItem Header="Пользователи" Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Форма добавления -->
+                    <Border Grid.Row="0" Background="#F8F9FA" Padding="15" CornerRadius="5" Margin="0,0,0,15">
+                        <StackPanel>
+                            <TextBlock Text="Добавить/Редактировать пользователя" 
+                                       FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <TextBox x:Name="txtUsername" Grid.Row="0" Grid.Column="0" 
+                                         Margin="5" Padding="5" Text="Логин"/>
+                                <PasswordBox x:Name="txtPassword" Grid.Row="0" Grid.Column="1" 
+                                            Margin="5" Padding="5"/>
+                                <TextBox x:Name="txtFirstName" Grid.Row="0" Grid.Column="2" 
+                                         Margin="5" Padding="5" Text="Имя"/>
+
+                                <TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="0" 
+                                         Margin="5" Padding="5" Text="Фамилия"/>
+                                <TextBox x:Name="txtEmail" Grid.Row="1" Grid.Column="1" 
+                                         Margin="5" Padding="5" Text="Email"/>
+                                <ComboBox x:Name="cmbRole" Grid.Row="1" Grid.Column="2" 
+                                          Margin="5" Padding="5" 
+                                          DisplayMemberPath="RoleName" SelectedValuePath="RoleID"/>
+
+                                <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal">
+                                    <Button x:Name="btnAddUser" Content="Добавить" 
+                                            Background="#28A745" Foreground="White"
+                                            Padding="15,5" Margin="5" Cursor="Hand"
+                                            Click="btnAddUser_Click"/>
+                                    <Button x:Name="btnClearForm" Content="Очистить" 
+                                            Background="#6C757D" Foreground="White"
+                                            Padding="15,5" Margin="5" Cursor="Hand"
+                                            Click="btnClearForm_Click"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Фильтры -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
+                        <TextBlock Text="Роль:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <ComboBox x:Name="cmbRoleFilter" Width="150" Margin="0,0,10,0"
+                                  SelectionChanged="cmbRoleFilter_SelectionChanged"/>
+                        <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
+                        <TextBox x:Name="txtSearch" Width="200" 
+                                 TextChanged="txtSearch_TextChanged"/>
+                    </StackPanel>
+
+                    <!-- Список пользователей -->
+                    <ListView x:Name="lvUsers" Grid.Row="2">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Логин" Width="100" 
+                                                DisplayMemberBinding="{Binding Username}"/>
+                                <GridViewColumn Header="Имя" Width="100" 
+                                                DisplayMemberBinding="{Binding FirstName}"/>
+                                <GridViewColumn Header="Фамилия" Width="100" 
+                                                DisplayMemberBinding="{Binding LastName}"/>
+                                <GridViewColumn Header="Email" Width="150" 
+                                                DisplayMemberBinding="{Binding Email}"/>
+                                <GridViewColumn Header="Роль" Width="100" 
+                                                DisplayMemberBinding="{Binding Role.RoleName}"/>
+                                <GridViewColumn Header="Статус" Width="80">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsActive}" 
+                                                      IsEnabled="False"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Действия" Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button x:Name="btnEditUser" Content="Ред." 
+                                                        Background="#FFC107" Foreground="White"
+                                                        Padding="5" Margin="0,0,5,0" Cursor="Hand"
+                                                        Tag="{Binding UserID}" 
+                                                        Click="btnEditUser_Click"/>
+                                                <Button x:Name="btnDeleteUser" Content="Удал." 
+                                                        Background="#DC3545" Foreground="White"
+                                                        Padding="5" Cursor="Hand"
+                                                        Tag="{Binding UserID}" 
+                                                        Click="btnDeleteUser_Click"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+
+            <!-- Вкладка тестов -->
+            <TabItem Header="Тесты" Padding="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
+                        <Button x:Name="btnAddTest" Content="+ Добавить тест" 
+                                Background="#28A745" Foreground="White"
+                                Padding="15,5" Cursor="Hand" Click="btnAddTest_Click"/>
+                    </StackPanel>
+
+                    <ListView x:Name="lvTests" Grid.Row="1">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Название" Width="200" 
+                                                DisplayMemberBinding="{Binding TestName}"/>
+                                <GridViewColumn Header="Предмет" Width="120" 
+                                                DisplayMemberBinding="{Binding Subject.SubjectName}"/>
+                                <GridViewColumn Header="Создатель" Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding User.LastName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Время" Width="80" 
+                                                DisplayMemberBinding="{Binding TimeLimit}"/>
+                                <GridViewColumn Header="Проходной %" Width="80" 
+                                                DisplayMemberBinding="{Binding PassingScore}"/>
+                                <GridViewColumn Header="Статус" Width="80">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <CheckBox IsChecked="{Binding IsActive}" 
+                                                      IsEnabled="False"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Действия" Width="150">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button x:Name="btnEditTest" Content="Ред." 
+                                                        Background="#FFC107" Foreground="White"
+                                                        Padding="5" Margin="0,0,5,0" Cursor="Hand"
+                                                        Tag="{Binding TestID}" 
+                                                        Click="btnEditTest_Click"/>
+                                                <Button x:Name="btnDeleteTest" Content="Удал." 
+                                                        Background="#DC3545" Foreground="White"
+                                                        Padding="5" Cursor="Hand"
+                                                        Tag="{Binding TestID}" 
+                                                        Click="btnDeleteTest_Click"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+    </Grid>
+</Page>
