@@ -54,7 +54,7 @@
                                 Padding="15,5" Cursor="Hand" Click="btnAddTest_Click"/>
                     </StackPanel>
 
-                    <ListView x:Name="lvTests" Grid.Row="1">
+                    <ListView x:Name="lvTests" Grid.Row="1" ItemsSource="{Binding Tests}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Название" Width="200" 

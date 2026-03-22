@@ -38,9 +38,9 @@
             </Grid>
         </Border>
 
-        <!-- Основной контент -->
+        <!-- Основной контент с вкладками -->
         <TabControl Grid.Row="1" Margin="20" Background="White">
-            <!-- Вкладка пользователей -->
+            <!-- Вкладка управления пользователями -->
             <TabItem Header="Пользователи" Padding="10">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -49,7 +49,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <!-- Форма добавления -->
+                    <!-- Форма добавления/редактирования -->
                     <Border Grid.Row="0" Background="#F8F9FA" Padding="15" CornerRadius="5" Margin="0,0,0,15">
                         <StackPanel>
                             <TextBlock Text="Добавить/Редактировать пользователя" 
@@ -68,28 +68,35 @@
                                 </Grid.RowDefinitions>
 
                                 <TextBox x:Name="txtUsername" Grid.Row="0" Grid.Column="0" 
-                                         Margin="5" Padding="5" Text="Логин"/>
+                                         Margin="5" Padding="8" 
+                                         ToolTip="Логин"/>
                                 <PasswordBox x:Name="txtPassword" Grid.Row="0" Grid.Column="1" 
-                                            Margin="5" Padding="5"/>
+                                            Margin="5" Padding="8" 
+                                            ToolTip="Пароль (оставьте пустым при редактировании, если не меняете)"/>
                                 <TextBox x:Name="txtFirstName" Grid.Row="0" Grid.Column="2" 
-                                         Margin="5" Padding="5" Text="Имя"/>
+                                         Margin="5" Padding="8" 
+                                         ToolTip="Имя"/>
 
                                 <TextBox x:Name="txtLastName" Grid.Row="1" Grid.Column="0" 
-                                         Margin="5" Padding="5" Text="Фамилия"/>
+                                         Margin="5" Padding="8" 
+                                         ToolTip="Фамилия"/>
                                 <TextBox x:Name="txtEmail" Grid.Row="1" Grid.Column="1" 
-                                         Margin="5" Padding="5" Text="Email"/>
+                                         Margin="5" Padding="8" 
+                                         ToolTip="Email (необязательно)"/>
                                 <ComboBox x:Name="cmbRole" Grid.Row="1" Grid.Column="2" 
-                                          Margin="5" Padding="5" 
-                                          DisplayMemberPath="RoleName" SelectedValuePath="RoleID"/>
+                                          Margin="5" Padding="8" 
+                                          DisplayMemberPath="RoleName" 
+                                          SelectedValuePath="RoleID"
+                                          ToolTip="Выберите роль"/>
 
-                                <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal">
+                                <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal" Margin="5,0,0,0">
                                     <Button x:Name="btnAddUser" Content="Добавить" 
                                             Background="#28A745" Foreground="White"
-                                            Padding="15,5" Margin="5" Cursor="Hand"
+                                            Padding="15,8" Margin="5,0,5,0" Cursor="Hand"
                                             Click="btnAddUser_Click"/>
                                     <Button x:Name="btnClearForm" Content="Очистить" 
                                             Background="#6C757D" Foreground="White"
-                                            Padding="15,5" Margin="5" Cursor="Hand"
+                                            Padding="15,8" Cursor="Hand"
                                             Click="btnClearForm_Click"/>
                                 </StackPanel>
                             </Grid>
@@ -100,6 +107,8 @@
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,10">
                         <TextBlock Text="Роль:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <ComboBox x:Name="cmbRoleFilter" Width="150" Margin="0,0,10,0"
+                                  DisplayMemberPath="RoleName" 
+                                  SelectedValuePath="RoleID"
                                   SelectionChanged="cmbRoleFilter_SelectionChanged"/>
                         <TextBlock Text="Поиск:" VerticalAlignment="Center" Margin="0,0,5,0"/>
                         <TextBox x:Name="txtSearch" Width="200" 
@@ -107,7 +116,8 @@
                     </StackPanel>
 
                     <!-- Список пользователей -->
-                    <ListView x:Name="lvUsers" Grid.Row="2">
+                    <ListView x:Name="lvUsers" Grid.Row="2"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Логин" Width="100" 
@@ -119,11 +129,11 @@
                                 <GridViewColumn Header="Email" Width="150" 
                                                 DisplayMemberBinding="{Binding Email}"/>
                                 <GridViewColumn Header="Роль" Width="100" 
-                                                DisplayMemberBinding="{Binding Role.RoleName}"/>
+                                                DisplayMemberBinding="{Binding RoleName}"/>
                                 <GridViewColumn Header="Статус" Width="80">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsActive}" 
+                                            <CheckBox IsChecked="{Binding IsActive, Mode=OneWay}" 
                                                       IsEnabled="False"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -134,13 +144,11 @@
                                             <StackPanel Orientation="Horizontal">
                                                 <Button x:Name="btnEditUser" Content="Ред." 
                                                         Background="#FFC107" Foreground="White"
-                                                        Padding="5" Margin="0,0,5,0" Cursor="Hand"
-                                                        Tag="{Binding UserID}" 
+                                                        Padding="8,3" Margin="0,0,5,0" Cursor="Hand"
                                                         Click="btnEditUser_Click"/>
                                                 <Button x:Name="btnDeleteUser" Content="Удал." 
                                                         Background="#DC3545" Foreground="White"
-                                                        Padding="5" Cursor="Hand"
-                                                        Tag="{Binding UserID}" 
+                                                        Padding="8,3" Cursor="Hand"
                                                         Click="btnDeleteUser_Click"/>
                                             </StackPanel>
                                         </DataTemplate>
@@ -152,7 +160,7 @@
                 </Grid>
             </TabItem>
 
-            <!-- Вкладка тестов -->
+            <!-- Вкладка управления тестами -->
             <TabItem Header="Тесты" Padding="10">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -160,34 +168,33 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
+                    <!-- Кнопка добавления -->
                     <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
                         <Button x:Name="btnAddTest" Content="+ Добавить тест" 
                                 Background="#28A745" Foreground="White"
-                                Padding="15,5" Cursor="Hand" Click="btnAddTest_Click"/>
+                                Padding="15,8" FontSize="14" FontWeight="Bold"
+                                Cursor="Hand" Click="btnAddTest_Click"/>
                     </StackPanel>
 
-                    <ListView x:Name="lvTests" Grid.Row="1">
+                    <!-- Список тестов -->
+                    <ListView x:Name="lvTests" Grid.Row="1"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Название" Width="200" 
                                                 DisplayMemberBinding="{Binding TestName}"/>
                                 <GridViewColumn Header="Предмет" Width="120" 
-                                                DisplayMemberBinding="{Binding Subject.SubjectName}"/>
-                                <GridViewColumn Header="Создатель" Width="150">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Text="{Binding User.LastName}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="Время" Width="80" 
+                                                DisplayMemberBinding="{Binding SubjectName}"/>
+                                <GridViewColumn Header="Создатель" Width="150" 
+                                                DisplayMemberBinding="{Binding CreatorName}"/>
+                                <GridViewColumn Header="Время (мин)" Width="80" 
                                                 DisplayMemberBinding="{Binding TimeLimit}"/>
                                 <GridViewColumn Header="Проходной %" Width="80" 
                                                 DisplayMemberBinding="{Binding PassingScore}"/>
                                 <GridViewColumn Header="Статус" Width="80">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <CheckBox IsChecked="{Binding IsActive}" 
+                                            <CheckBox IsChecked="{Binding IsActive, Mode=OneWay}" 
                                                       IsEnabled="False"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -198,13 +205,11 @@
                                             <StackPanel Orientation="Horizontal">
                                                 <Button x:Name="btnEditTest" Content="Ред." 
                                                         Background="#FFC107" Foreground="White"
-                                                        Padding="5" Margin="0,0,5,0" Cursor="Hand"
-                                                        Tag="{Binding TestID}" 
+                                                        Padding="8,3" Margin="0,0,5,0" Cursor="Hand"
                                                         Click="btnEditTest_Click"/>
                                                 <Button x:Name="btnDeleteTest" Content="Удал." 
                                                         Background="#DC3545" Foreground="White"
-                                                        Padding="5" Cursor="Hand"
-                                                        Tag="{Binding TestID}" 
+                                                        Padding="8,3" Cursor="Hand"
                                                         Click="btnDeleteTest_Click"/>
                                             </StackPanel>
                                         </DataTemplate>

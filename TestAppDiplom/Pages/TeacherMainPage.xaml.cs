@@ -23,6 +23,10 @@ namespace TestAppDiplom.Pages
         public TeacherMainPage()
         {
             InitializeComponent();
+            LoadUserData();
+            LoadTests();
+            LoadFilters();
+            LoadResults();
         }
 
         private void LoadUserData()
