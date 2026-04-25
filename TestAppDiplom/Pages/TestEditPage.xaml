@@ -58,6 +58,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="150"/>
@@ -95,6 +96,16 @@
                                        Text="Активен:" VerticalAlignment="Center"/>
                             <CheckBox x:Name="chkIsActive" Grid.Row="5" Grid.Column="1" 
                                       Margin="0,5,0,10" IsChecked="True"/>
+                            <TextBlock Grid.Row="6" Grid.Column="0" 
+                                        Text="Назначить группам:" VerticalAlignment="Top" Margin="0,5,0,0"/>
+                            <StackPanel Grid.Row="6" Grid.Column="1" Margin="0,0,0,10">
+                                <ListBox x:Name="lbGroups" Height="100" 
+                                        SelectionMode="Multiple"
+                                        DisplayMemberPath="GroupNameWithSpecialty"
+                                        SelectionChanged="lbGroups_SelectionChanged"/>
+                                <TextBlock x:Name="txtNoGroups" Text="Нет доступных групп" 
+                                         Foreground="Gray" Visibility="Collapsed"/>
+                            </StackPanel>
                         </Grid>
                     </StackPanel>
                 </Border>

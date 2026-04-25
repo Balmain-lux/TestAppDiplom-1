@@ -35,5 +35,6 @@ namespace TestAppDiplom.DataBase
         public virtual DbSet<Users> Users { get; set; }
         public virtual DbSet<Groups> Groups { get; set; }
         public virtual DbSet<TeacherGroups> TeacherGroups { get; set; }
+        public virtual DbSet<TestGroups> TestGroups { get; set; }
     }
 }

@@ -59,6 +59,14 @@
           <Property Name="TeacherID" Type="int" Nullable="false" />
           <Property Name="GroupID" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="TestGroups">
+          <Key>
+            <PropertyRef Name="TestGroupID" />
+          </Key>
+          <Property Name="TestGroupID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TestID" Type="int" Nullable="false" />
+          <Property Name="GroupID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="TestResults">
           <Key>
             <PropertyRef Name="ResultID" />
@@ -161,6 +169,34 @@
             </Principal>
             <Dependent Role="TeacherGroups">
               <PropertyRef Name="TeacherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TestGroup__Group__778AC167">
+          <End Role="Groups" Type="Self.Groups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TestGroups" Type="Self.TestGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="TestGroups">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TestGroup__TestI__76969D2E">
+          <End Role="Tests" Type="Self.Tests" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TestGroups" Type="Self.TestGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="TestGroups">
+              <PropertyRef Name="TestID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -283,6 +319,7 @@
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Subjects" EntityType="Self.Subjects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TeacherGroups" EntityType="Self.TeacherGroups" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TestGroups" EntityType="Self.TestGroups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TestResults" EntityType="Self.TestResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tests" EntityType="Self.Tests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserAnswers" EntityType="Self.UserAnswers" Schema="dbo" store:Type="Tables" />
@@ -302,6 +339,14 @@
           <AssociationSet Name="FK__TeacherGr__Teach__72C60C4A" Association="Self.FK__TeacherGr__Teach__72C60C4A">
             <End Role="Users" EntitySet="Users" />
             <End Role="TeacherGroups" EntitySet="TeacherGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TestGroup__Group__778AC167" Association="Self.FK__TestGroup__Group__778AC167">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="TestGroups" EntitySet="TestGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TestGroup__TestI__76969D2E" Association="Self.FK__TestGroup__TestI__76969D2E">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="TestGroups" EntitySet="TestGroups" />
           </AssociationSet>
           <AssociationSet Name="FK__TestResul__TestI__6754599E" Association="Self.FK__TestResul__TestI__6754599E">
             <End Role="Tests" EntitySet="Tests" />
@@ -421,6 +466,7 @@
           <NavigationProperty Name="Subjects" Relationship="Self.FK__Tests__SubjectID__5812160E" FromRole="Tests" ToRole="Subjects" />
           <NavigationProperty Name="TestResults" Relationship="Self.FK__TestResul__TestI__6754599E" FromRole="Tests" ToRole="TestResults" />
           <NavigationProperty Name="Users" Relationship="Self.FK__Tests__CreatedBy__59063A47" FromRole="Tests" ToRole="Users" />
+          <NavigationProperty Name="TestGroups" Relationship="StudentTestingDBModel.FK__TestGroup__TestI__76969D2E" FromRole="Tests" ToRole="TestGroups" />
         </EntityType>
         <EntityType Name="UserAnswers">
           <Key>
@@ -646,6 +692,15 @@
             <End Role="Users" EntitySet="Users" />
             <End Role="TeacherGroups" EntitySet="TeacherGroups" />
           </AssociationSet>
+          <EntitySet Name="TestGroups" EntityType="StudentTestingDBModel.TestGroups" />
+          <AssociationSet Name="FK__TestGroup__Group__778AC167" Association="StudentTestingDBModel.FK__TestGroup__Group__778AC167">
+            <End Role="Groups" EntitySet="Groups" />
+            <End Role="TestGroups" EntitySet="TestGroups" />
+          </AssociationSet>
+          <AssociationSet Name="FK__TestGroup__TestI__76969D2E" Association="StudentTestingDBModel.FK__TestGroup__TestI__76969D2E">
+            <End Role="Tests" EntitySet="Tests" />
+            <End Role="TestGroups" EntitySet="TestGroups" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Groups">
           <Key>
@@ -658,6 +713,7 @@
           <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="TeacherGroups" Relationship="StudentTestingDBModel.FK__TeacherGr__Group__73BA3083" FromRole="Groups" ToRole="TeacherGroups" />
           <NavigationProperty Name="Users" Relationship="StudentTestingDBModel.FK__Users__GroupID__71D1E811" FromRole="Groups" ToRole="Users" />
+          <NavigationProperty Name="TestGroups" Relationship="StudentTestingDBModel.FK__TestGroup__Group__778AC167" FromRole="Groups" ToRole="TestGroups" />
         </EntityType>
         <EntityType Name="TeacherGroups">
           <Key>
@@ -702,6 +758,44 @@
             </Principal>
             <Dependent Role="TeacherGroups">
               <PropertyRef Name="TeacherID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="TestGroups">
+          <Key>
+            <PropertyRef Name="TestGroupID" />
+          </Key>
+          <Property Name="TestGroupID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TestID" Type="Int32" Nullable="false" />
+          <Property Name="GroupID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Groups" Relationship="StudentTestingDBModel.FK__TestGroup__Group__778AC167" FromRole="TestGroups" ToRole="Groups" />
+          <NavigationProperty Name="Tests" Relationship="StudentTestingDBModel.FK__TestGroup__TestI__76969D2E" FromRole="TestGroups" ToRole="Tests" />
+        </EntityType>
+        <Association Name="FK__TestGroup__Group__778AC167">
+          <End Type="StudentTestingDBModel.Groups" Role="Groups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="StudentTestingDBModel.TestGroups" Role="TestGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Groups">
+              <PropertyRef Name="GroupID" />
+            </Principal>
+            <Dependent Role="TestGroups">
+              <PropertyRef Name="GroupID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__TestGroup__TestI__76969D2E">
+          <End Type="StudentTestingDBModel.Tests" Role="Tests" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="StudentTestingDBModel.TestGroups" Role="TestGroups" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Tests">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="TestGroups">
+              <PropertyRef Name="TestID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -825,6 +919,15 @@
                 <ScalarProperty Name="GroupID" ColumnName="GroupID" />
                 <ScalarProperty Name="TeacherID" ColumnName="TeacherID" />
                 <ScalarProperty Name="TeacherGroupID" ColumnName="TeacherGroupID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestGroups">
+            <EntityTypeMapping TypeName="StudentTestingDBModel.TestGroups">
+              <MappingFragment StoreEntitySet="TestGroups">
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="TestGroupID" ColumnName="TestGroupID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

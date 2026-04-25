@@ -28,6 +28,9 @@
         <AssociationConnector Association="StudentTestingDBModel.FK__TeacherGr__Group__73BA3083" />
         <AssociationConnector Association="StudentTestingDBModel.FK__Users__GroupID__71D1E811" />
         <AssociationConnector Association="StudentTestingDBModel.FK__TeacherGr__Teach__72C60C4A" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.TestGroups" Width="1.5" PointX="10.5" PointY="0.75" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__TestGroup__Group__778AC167" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__TestGroup__TestI__76969D2E" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

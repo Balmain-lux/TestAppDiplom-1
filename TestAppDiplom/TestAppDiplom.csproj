@@ -106,6 +106,9 @@
     <Compile Include="DataBase\TeacherGroups.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataBase\TestGroups.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="DataBase\TestResults.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

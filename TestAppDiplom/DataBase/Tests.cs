@@ -19,6 +19,7 @@ namespace TestAppDiplom.DataBase
         {
             this.Questions = new HashSet<Questions>();
             this.TestResults = new HashSet<TestResults>();
+            this.TestGroups = new HashSet<TestGroups>();
         }
     
         public int TestID { get; set; }
@@ -37,5 +38,7 @@ namespace TestAppDiplom.DataBase
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TestResults> TestResults { get; set; }
         public virtual Users Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TestGroups> TestGroups { get; set; }
     }
 }

@@ -51,14 +51,27 @@ namespace TestAppDiplom.Pages
         {
             try
             {
+                // Получаем группу студента
+                var studentGroupId = App.CurrentUser.GroupID;
+
+                // Получаем ID тестов, которые студент уже прошел
                 var completedTestIds = MainWindow.db.TestResults
                     .Where(tr => tr.UserID == App.CurrentUser.UserID)
                     .Select(tr => tr.TestID)
                     .Distinct()
                     .ToList();
 
+                // Получаем ID тестов, назначенных группе студента
+                var testIdsForGroup = MainWindow.db.TestGroups
+                    .Where(tg => tg.GroupID == studentGroupId)
+                    .Select(tg => tg.TestID)
+                    .ToList();
+
+                // Получаем активные тесты, назначенные группе студента, которые он еще не проходил
                 var availableTests = MainWindow.db.Tests
-                    .Where(t => t.IsActive == true && !completedTestIds.Contains(t.TestID))
+                    .Where(t => t.IsActive == true &&
+                               testIdsForGroup.Contains(t.TestID) &&
+                               !completedTestIds.Contains(t.TestID))
                     .OrderBy(t => t.TestName)
                     .ToList();
 

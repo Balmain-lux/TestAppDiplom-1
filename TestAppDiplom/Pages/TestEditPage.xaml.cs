@@ -23,12 +23,14 @@ namespace TestAppDiplom.Pages
         private int testId;
         private DataBase.Tests currentTest;
         private List<QuestionItem> questions = new List<QuestionItem>();
+        private List<int> selectedGroupIds = new List<int>();
 
         public TestEditPage(int testId)
         {
             InitializeComponent();
             this.testId = testId;
             LoadSubjects();
+            LoadGroupsForTest();
 
             if (testId == 0)
             {
@@ -149,6 +151,14 @@ namespace TestAppDiplom.Pages
                 return;
             }
 
+            // Проверка выбора групп
+            if (selectedGroupIds.Count == 0)
+            {
+                MessageBox.Show("Назначьте тест хотя бы одной группе!", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             try
             {
                 // Сохраняем основную информацию
@@ -173,6 +183,27 @@ namespace TestAppDiplom.Pages
 
                 MainWindow.db.SaveChanges();
                 testId = currentTest.TestID;
+
+                // Обновляем назначенные группы
+                // Удаляем старые связи
+                var oldTestGroups = MainWindow.db.TestGroups.Where(tg => tg.TestID == testId).ToList();
+                foreach (var oldGroup in oldTestGroups)
+                {
+                    MainWindow.db.TestGroups.Remove(oldGroup);
+                }
+
+                // Добавляем новые связи
+                foreach (var groupId in selectedGroupIds)
+                {
+                    var testGroup = new DataBase.TestGroups
+                    {
+                        TestID = testId,
+                        GroupID = groupId
+                    };
+                    MainWindow.db.TestGroups.Add(testGroup);
+                }
+
+                MainWindow.db.SaveChanges();
 
                 MessageBox.Show("Тест успешно сохранен!", "Успех",
                     MessageBoxButton.OK, MessageBoxImage.Information);
@@ -258,6 +289,80 @@ namespace TestAppDiplom.Pages
             public int QuestionType { get; set; }
             public string QuestionTypeName { get; set; }
             public int Points { get; set; }
+        }
+
+        private void LoadGroupsForTest()
+        {
+            try
+            {
+                List<DataBase.Groups> groups;
+
+                // Для преподавателя - только его группы
+                if (App.CurrentUser.RoleID == 2) // Преподаватель
+                {
+                    var myGroupIds = MainWindow.db.TeacherGroups
+                        .Where(tg => tg.TeacherID == App.CurrentUser.UserID)
+                        .Select(tg => tg.GroupID)
+                        .ToList();
+
+                    groups = MainWindow.db.Groups
+                        .Where(g => myGroupIds.Contains(g.GroupID))
+                        .OrderBy(g => g.Specialty)
+                        .ThenBy(g => g.GroupName)
+                        .ToList();
+                }
+                else // Администратор - все группы
+                {
+                    groups = MainWindow.db.Groups
+                        .OrderBy(g => g.Specialty)
+                        .ThenBy(g => g.GroupName)
+                        .ToList();
+                }
+
+               
+
+                lbGroups.ItemsSource = groups;
+                txtNoGroups.Visibility = groups.Any() ? Visibility.Collapsed : Visibility.Visible;
+
+                // Если редактируем существующий тест, отмечаем выбранные группы
+                if (testId != 0)
+                {
+                    var assignedGroups = MainWindow.db.TestGroups
+                        .Where(tg => tg.TestID == testId)
+                        .Select(tg => tg.GroupID)
+                        .ToList();
+
+                    selectedGroupIds = assignedGroups;
+
+                    // Отмечаем выбранные группы в ListBox
+                    foreach (var item in lbGroups.Items)
+                    {
+                        var group = item as DataBase.Groups;
+                        if (group != null && selectedGroupIds.Contains(group.GroupID))
+                        {
+                            lbGroups.SelectedItems.Add(item);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при загрузке групп: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void lbGroups_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            selectedGroupIds.Clear();
+            foreach (var item in lbGroups.SelectedItems)
+            {
+                var group = item as DataBase.Groups;
+                if (group != null)
+                {
+                    selectedGroupIds.Add(group.GroupID);
+                }
+            }
         }
     }
 }

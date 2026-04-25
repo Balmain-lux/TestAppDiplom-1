@@ -41,10 +41,37 @@ namespace TestAppDiplom.Pages
         {
             try
             {
-                var tests = MainWindow.db.Tests
-                    .OrderByDescending(t => t.CreatedDate)
-                    .ToList();
+                List<DataBase.Tests> tests;
+
+                if (App.CurrentUser.RoleID == 2) // Преподаватель
+                {
+                    // Получаем группы преподавателя
+                    var myGroupIds = MainWindow.db.TeacherGroups
+                        .Where(tg => tg.TeacherID == App.CurrentUser.UserID)
+                        .Select(tg => tg.GroupID)
+                        .ToList();
+
+                    // Получаем тесты, назначенные этим группам
+                    var testIdsForMyGroups = MainWindow.db.TestGroups
+                        .Where(tg => myGroupIds.Contains(tg.GroupID))
+                        .Select(tg => tg.TestID)
+                        .Distinct()
+                        .ToList();
+
+                    tests = MainWindow.db.Tests
+                        .Where(t => testIdsForMyGroups.Contains(t.TestID) || t.CreatedBy == App.CurrentUser.UserID)
+                        .OrderByDescending(t => t.CreatedDate)
+                        .ToList();
+                }
+                else // Администратор
+                {
+                    tests = MainWindow.db.Tests
+                        .OrderByDescending(t => t.CreatedDate)
+                        .ToList();
+                }
+
                 lvTests.ItemsSource = tests;
+                txtNoTests.Visibility = tests.Any() ? Visibility.Collapsed : Visibility.Visible;
             }
             catch (Exception ex)
             {

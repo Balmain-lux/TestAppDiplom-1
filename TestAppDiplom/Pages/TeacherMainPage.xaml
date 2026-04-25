@@ -99,8 +99,16 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+
+                    <TextBlock x:Name="txtNoTests" Grid.Row="1"
+                                Text="Нет созданных тестов" 
+                                Foreground="Gray" HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" Visibility="Collapsed"/>
+
                 </Grid>
             </TabItem>
+            
+            
 
             <!-- Вкладка с результатами -->
             <TabItem Header="Результаты студентов" Padding="10">

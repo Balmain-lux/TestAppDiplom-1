@@ -19,6 +19,7 @@ namespace TestAppDiplom.DataBase
         {
             this.TeacherGroups = new HashSet<TeacherGroups>();
             this.Users = new HashSet<Users>();
+            this.TestGroups = new HashSet<TestGroups>();
         }
     
         public int GroupID { get; set; }
@@ -31,5 +32,13 @@ namespace TestAppDiplom.DataBase
         public virtual ICollection<TeacherGroups> TeacherGroups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Users> Users { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<TestGroups> TestGroups { get; set; }
+
+        public string GroupNameWithSpecialty
+        {
+            get { return $"{GroupName} ({Specialty})"; }
+        }
+
     }
 }
