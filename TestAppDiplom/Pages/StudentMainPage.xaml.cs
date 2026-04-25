@@ -32,7 +32,18 @@ namespace TestAppDiplom.Pages
         {
             if (App.CurrentUser != null)
             {
-                txtUserInfo.Text = $"{App.CurrentUser.FirstName} {App.CurrentUser.LastName} (Студент)";
+                // Загружаем пользователя с группой
+                var userWithGroup = MainWindow.db.Users
+                    .Include("Groups")
+                    .FirstOrDefault(u => u.UserID == App.CurrentUser.UserID);
+
+                string groupInfo = "";
+                if (userWithGroup != null && userWithGroup.GroupID.HasValue && userWithGroup.Groups != null)
+                {
+                    groupInfo = $" (Группа: {userWithGroup.Groups.GroupName}, {userWithGroup.Groups.Specialty})";
+                    App.CurrentUser.Groups = userWithGroup.Groups; // Обновляем ссылку
+                }
+                txtUserInfo.Text = $"{userWithGroup.FirstName} {userWithGroup.LastName}{groupInfo}";
             }
         }
 

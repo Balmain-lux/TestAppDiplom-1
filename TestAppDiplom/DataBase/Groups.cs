@@ -12,34 +12,24 @@ namespace TestAppDiplom.DataBase
     using System;
     using System.Collections.Generic;
     
-    public partial class Users
+    public partial class Groups
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Users()
+        public Groups()
         {
-            this.TestResults = new HashSet<TestResults>();
-            this.Tests = new HashSet<Tests>();
             this.TeacherGroups = new HashSet<TeacherGroups>();
+            this.Users = new HashSet<Users>();
         }
     
-        public int UserID { get; set; }
-        public string Username { get; set; }
-        public string Password { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Email { get; set; }
-        public int RoleID { get; set; }
-        public Nullable<bool> IsActive { get; set; }
-        public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<int> GroupID { get; set; }
+        public int GroupID { get; set; }
+        public string GroupName { get; set; }
+        public string Specialty { get; set; }
+        public Nullable<int> Course { get; set; }
+        public string Description { get; set; }
     
-        public virtual Roles Roles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<TestResults> TestResults { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Tests> Tests { get; set; }
-        public virtual Groups Groups { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TeacherGroups> TeacherGroups { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Users> Users { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace TestAppDiplom.Pages
             LoadRoles();
             LoadUsers();
             LoadTests();
+            LoadGroupsForAdmin();
 
         }
 
@@ -40,6 +41,38 @@ namespace TestAppDiplom.Pages
                 txtUserInfo.Text = $"{App.CurrentUser.FirstName} {App.CurrentUser.LastName} (Администратор)";
             }
         }
+        private void LoadGroupsForAdmin()
+        {
+            try
+            {
+                var groups = MainWindow.db.Groups
+                    .OrderBy(g => g.Specialty)
+                    .ThenBy(g => g.GroupName)
+                    .ToList();
+                cmbGroup.ItemsSource = groups;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки групп: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void cmbRole_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbRole.SelectedItem != null)
+            {
+                var selectedRole = (DataBase.Roles)cmbRole.SelectedItem;
+                // Включаем выбор группы только если выбрана роль "Студент" (ID=1)
+                cmbGroup.IsEnabled = selectedRole.RoleID == 1;
+                if (!cmbGroup.IsEnabled)
+                {
+                    cmbGroup.SelectedItem = null;
+                }
+            }
+        }
+
+
 
         private void LoadRoles()
         {
@@ -69,26 +102,15 @@ namespace TestAppDiplom.Pages
         {
             try
             {
-                // Явно загружаем связанные данные с помощью Include
                 var users = MainWindow.db.Users
-                    .Include("Roles") // или .Include(u => u.Roles) если используете LINQ
+                    .Include("Roles")
+                    .Include("Groups")
                     .OrderBy(u => u.LastName)
                     .ThenBy(u => u.FirstName)
                     .ToList();
 
-                // Создаем анонимный тип для отображения
-                var userView = users.Select(u => new
-                {
-                    u.UserID,
-                    u.Username,
-                    u.FirstName,
-                    u.LastName,
-                    u.Email,
-                    RoleName = u.Roles?.RoleName ?? "Не указана", // Используем Roles, а не Role
-                    u.IsActive
-                }).ToList();
-
-                lvUsers.ItemsSource = userView;
+                // Группа уже загружена через Include, привязка {Binding Groups.GroupName} работает
+                lvUsers.ItemsSource = users;
             }
             catch (Exception ex)
             {
@@ -136,6 +158,8 @@ namespace TestAppDiplom.Pages
             txtLastName.Text = "";
             txtEmail.Text = "";
             cmbRole.SelectedIndex = -1;
+            cmbGroup.SelectedItem = null;  
+            cmbGroup.IsEnabled = false;
             editingUserId = null;
             btnAddUser.Content = "Добавить";
         }
@@ -155,32 +179,28 @@ namespace TestAppDiplom.Pages
                 string searchText = txtSearch.Text?.ToLower().Trim() ?? "";
                 if (!string.IsNullOrWhiteSpace(searchText))
                 {
+                    // Получаем ID групп, которые соответствуют поиску
+                    var matchingGroupIds = MainWindow.db.Groups
+                        .Where(g => g.GroupName.ToLower().Contains(searchText))
+                        .Select(g => g.GroupID)
+                        .ToList();
+
                     query = query.Where(u =>
                         (u.Username != null && u.Username.ToLower().Contains(searchText)) ||
                         (u.FirstName != null && u.FirstName.ToLower().Contains(searchText)) ||
                         (u.LastName != null && u.LastName.ToLower().Contains(searchText)) ||
-                        (u.Email != null && u.Email.ToLower().Contains(searchText)));
+                        (u.Email != null && u.Email.ToLower().Contains(searchText)) ||
+                        (u.GroupID != null && matchingGroupIds.Contains(u.GroupID.Value)));
                 }
 
                 var filteredUsers = query
                     .Include("Roles")
+                    .Include("Groups")
                     .OrderBy(u => u.LastName)
                     .ThenBy(u => u.FirstName)
                     .ToList();
 
-                // Создаем анонимный тип для отображения
-                var userView = filteredUsers.Select(u => new
-                {
-                    u.UserID,
-                    u.Username,
-                    u.FirstName,
-                    u.LastName,
-                    u.Email,
-                    RoleName = u.Roles?.RoleName ?? "Не указана",
-                    u.IsActive
-                }).ToList();
-
-                lvUsers.ItemsSource = userView;
+                lvUsers.ItemsSource = filteredUsers;
             }
             catch (Exception ex)
             {
@@ -199,12 +219,22 @@ namespace TestAppDiplom.Pages
         private void btnAddUser_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(txtUsername.Text) ||
-                string.IsNullOrWhiteSpace(txtPassword.Password) ||
-                string.IsNullOrWhiteSpace(txtFirstName.Text) ||
-                string.IsNullOrWhiteSpace(txtLastName.Text) ||
-                cmbRole.SelectedItem == null)
+       string.IsNullOrWhiteSpace(txtPassword.Password) ||
+       string.IsNullOrWhiteSpace(txtFirstName.Text) ||
+       string.IsNullOrWhiteSpace(txtLastName.Text) ||
+       cmbRole.SelectedItem == null)
             {
                 MessageBox.Show("Заполните все обязательные поля!", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var selectedRole = (DataBase.Roles)cmbRole.SelectedItem;
+
+            // Проверка выбора группы для студентов
+            if (selectedRole.RoleID == 1 && cmbGroup.SelectedItem == null)
+            {
+                MessageBox.Show("Для студента обязательно выбрать группу!", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -213,7 +243,6 @@ namespace TestAppDiplom.Pages
             {
                 if (editingUserId == null)
                 {
-                    // Проверка уникальности логина
                     var existingUser = MainWindow.db.Users
                         .FirstOrDefault(u => u.Username == txtUsername.Text);
                     if (existingUser != null)
@@ -230,9 +259,10 @@ namespace TestAppDiplom.Pages
                         FirstName = txtFirstName.Text,
                         LastName = txtLastName.Text,
                         Email = string.IsNullOrWhiteSpace(txtEmail.Text) ? null : txtEmail.Text,
-                        RoleID = (int)cmbRole.SelectedValue,
+                        RoleID = selectedRole.RoleID,
                         IsActive = true,
-                        CreatedDate = DateTime.Now
+                        CreatedDate = DateTime.Now,
+                        GroupID = selectedRole.RoleID == 1 ? (int?)cmbGroup.SelectedValue : null 
                     };
 
                     MainWindow.db.Users.Add(newUser);
@@ -246,7 +276,6 @@ namespace TestAppDiplom.Pages
                     var user = MainWindow.db.Users.Find(editingUserId);
                     if (user != null)
                     {
-                        // Проверка уникальности логина (если он изменился)
                         if (user.Username != txtUsername.Text)
                         {
                             var existingUser = MainWindow.db.Users
@@ -267,7 +296,8 @@ namespace TestAppDiplom.Pages
                         user.FirstName = txtFirstName.Text;
                         user.LastName = txtLastName.Text;
                         user.Email = string.IsNullOrWhiteSpace(txtEmail.Text) ? null : txtEmail.Text;
-                        user.RoleID = (int)cmbRole.SelectedValue;
+                        user.RoleID = selectedRole.RoleID;
+                        user.GroupID = selectedRole.RoleID == 1 ? (int?)cmbGroup.SelectedValue : null;  
 
                         MainWindow.db.SaveChanges();
 
@@ -278,7 +308,7 @@ namespace TestAppDiplom.Pages
 
                 ClearForm();
                 LoadUsers();
-                ApplyUserFilters(); // Обновляем фильтр после добавления
+                ApplyUserFilters();
             }
             catch (Exception ex)
             {
@@ -307,11 +337,11 @@ namespace TestAppDiplom.Pages
             Button button = sender as Button;
             if (button != null)
             {
-                // Получаем данные из анонимного типа
-                dynamic user = button.DataContext;
-                int userId = user.UserID;
+                int userId = (int)button.Tag;
+                var dbUser = MainWindow.db.Users
+                    .Include("Groups")  // Добавьте Include для загрузки группы
+                    .FirstOrDefault(u => u.UserID == userId);
 
-                var dbUser = MainWindow.db.Users.Find(userId);
                 if (dbUser != null)
                 {
                     txtUsername.Text = dbUser.Username;
@@ -320,6 +350,17 @@ namespace TestAppDiplom.Pages
                     txtLastName.Text = dbUser.LastName;
                     txtEmail.Text = dbUser.Email;
                     cmbRole.SelectedValue = dbUser.RoleID;
+
+                    // Загружаем группу, если она есть
+                    cmbGroup.IsEnabled = dbUser.RoleID == 1;
+                    if (dbUser.GroupID.HasValue)
+                    {
+                        cmbGroup.SelectedValue = dbUser.GroupID.Value;
+                    }
+                    else
+                    {
+                        cmbGroup.SelectedItem = null;
+                    }
 
                     editingUserId = userId;
                     btnAddUser.Content = "Обновить";

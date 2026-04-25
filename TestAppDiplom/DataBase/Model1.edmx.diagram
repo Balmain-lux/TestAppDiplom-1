@@ -23,6 +23,11 @@
         <AssociationConnector Association="StudentTestingDBModel.FK__TestResul__UserI__66603565" ManuallyRouted="false" />
         <AssociationConnector Association="StudentTestingDBModel.FK__UserAnswe__Resul__6B24EA82" ManuallyRouted="false" />
         <AssociationConnector Association="StudentTestingDBModel.FK__Tests__CreatedBy__59063A47" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.Groups" Width="1.5" PointX="0.75" PointY="1.75" />
+        <EntityTypeShape EntityType="StudentTestingDBModel.TeacherGroups" Width="1.5" PointX="8.25" PointY="0.875" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__TeacherGr__Group__73BA3083" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__Users__GroupID__71D1E811" />
+        <AssociationConnector Association="StudentTestingDBModel.FK__TeacherGr__Teach__72C60C4A" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

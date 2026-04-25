@@ -57,21 +57,32 @@ namespace TestAppDiplom.Pages
         {
             try
             {
+                // Получаем группы преподавателя
+                var myGroupIds = MainWindow.db.TeacherGroups
+                    .Where(tg => tg.TeacherID == App.CurrentUser.UserID)
+                    .Select(tg => tg.GroupID)
+                    .ToList();
+
+                // Получаем студентов из групп преподавателя (без форматирования)
+                var studentsFromDb = MainWindow.db.Users
+                    .Include("Groups")
+                    .Where(u => u.RoleID == 1 && myGroupIds.Contains(u.GroupID ?? 0))
+                    .ToList();
+
+                // Форматируем на стороне клиента
+                var students = studentsFromDb.Select(u => new {
+                    u.UserID,
+                    FullName = u.LastName + " " + u.FirstName + (u.Groups != null ? " (гр. " + u.Groups.GroupName + ")" : "")
+                }).ToList();
+
+                students.Insert(0, new { UserID = 0, FullName = "Все студенты" });
+                cmbStudentFilter.ItemsSource = students;
+                cmbStudentFilter.SelectedIndex = 0;
+
                 var tests = MainWindow.db.Tests.ToList();
                 tests.Insert(0, new DataBase.Tests { TestID = 0, TestName = "Все тесты" });
                 cmbTestFilter.ItemsSource = tests;
                 cmbTestFilter.SelectedIndex = 0;
-
-                var students = MainWindow.db.Users
-                    .Where(u => u.RoleID == 1)
-                    .Select(u => new {
-                        u.UserID,
-                        FullName = u.LastName + " " + u.FirstName
-                    })
-                    .ToList();
-                students.Insert(0, new { UserID = 0, FullName = "Все студенты" });
-                cmbStudentFilter.ItemsSource = students;
-                cmbStudentFilter.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -229,6 +240,11 @@ namespace TestAppDiplom.Pages
                 int resultId = (int)button.Tag;
                 NavigationService.Navigate(new TestResultPage(resultId));
             }
+        }
+
+        private void btnManageGroups_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new TeacherGroupsPage());
         }
     }
 }

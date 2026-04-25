@@ -25,17 +25,35 @@ namespace TestAppDiplom.Pages
         {
             InitializeComponent();
             LoadRoles();
+            LoadGroups();
+            cmbRole.SelectionChanged += CmbRole_SelectionChanged;
+        }
+
+        private void LoadGroups()
+        {
+            try
+            {
+                var groups = MainWindow.db.Groups
+                    .OrderBy(g => g.Specialty)
+                    .ThenBy(g => g.GroupName)
+                    .ToList();
+                cmbGroup.ItemsSource = groups;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка загрузки групп: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void LoadRoles()
         {
             try
             {
-                
                 cmbRole.ItemsSource = MainWindow.db.Roles
-                    .Where(r => r.RoleID != 3) 
+                    .Where(r => r.RoleID != 3)
                     .ToList();
-                cmbRole.SelectedIndex = 0; 
+                cmbRole.SelectedIndex = 0;
             }
             catch (Exception ex)
             {
@@ -43,6 +61,20 @@ namespace TestAppDiplom.Pages
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private void CmbRole_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cmbRole.SelectedItem != null)
+            {
+                var selectedRole = (Roles)cmbRole.SelectedItem;
+                cmbGroup.IsEnabled = selectedRole.RoleID == 1;
+                if (!cmbGroup.IsEnabled)
+                {
+                    cmbGroup.SelectedItem = null;
+                }
+            }
+        }
+
 
         private bool IsValidEmail(string email)
         {
@@ -57,6 +89,7 @@ namespace TestAppDiplom.Pages
             }
         }
 
+
         private void btnGoToLogin_Click(object sender, RoutedEventArgs e)
         {
 
@@ -66,15 +99,22 @@ namespace TestAppDiplom.Pages
 
         private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
-
             if (string.IsNullOrEmpty(txtUsername.Text) ||
-                string.IsNullOrEmpty(txtPassword.Password) ||
-                string.IsNullOrEmpty(txtConfirmPassword.Password) ||
-                string.IsNullOrEmpty(txtFirstName.Text) ||
-                string.IsNullOrEmpty(txtLastName.Text) ||
-                cmbRole.SelectedItem == null)
+                            string.IsNullOrEmpty(txtPassword.Password) ||
+                            string.IsNullOrEmpty(txtConfirmPassword.Password) ||
+                            string.IsNullOrEmpty(txtFirstName.Text) ||
+                            string.IsNullOrEmpty(txtLastName.Text) ||
+                            cmbRole.SelectedItem == null)
             {
                 MessageBox.Show("Заполните все обязательные поля!", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            var selectedRole = (Roles)cmbRole.SelectedItem;
+            if (selectedRole.RoleID == 1 && cmbGroup.SelectedItem == null)
+            {
+                MessageBox.Show("Для студентов обязательно выбрать группу!", "Ошибка",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -102,7 +142,6 @@ namespace TestAppDiplom.Pages
 
             try
             {
-
                 var existingUser = MainWindow.db.Users
                     .FirstOrDefault(u => u.Username == txtUsername.Text);
 
@@ -113,7 +152,6 @@ namespace TestAppDiplom.Pages
                     return;
                 }
 
-
                 var newUser = new Users
                 {
                     Username = txtUsername.Text,
@@ -123,7 +161,8 @@ namespace TestAppDiplom.Pages
                     Email = string.IsNullOrEmpty(txtEmail.Text) ? null : txtEmail.Text,
                     RoleID = (int)cmbRole.SelectedValue,
                     IsActive = true,
-                    CreatedDate = DateTime.Now
+                    CreatedDate = DateTime.Now,
+                    GroupID = selectedRole.RoleID == 1 ? (int?)cmbGroup.SelectedValue : null
                 };
 
                 MainWindow.db.Users.Add(newUser);
@@ -132,7 +171,6 @@ namespace TestAppDiplom.Pages
                 MessageBox.Show("Регистрация прошла успешно! Теперь вы можете войти.",
                     "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
 
-               
                 NavigationService.Navigate(new LoginPage());
             }
             catch (Exception ex)

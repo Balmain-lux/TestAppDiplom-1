@@ -28,6 +28,10 @@
                            VerticalAlignment="Center"/>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="btnManageGroups" Content="Мои группы" 
+                             Background="#FFC107" Foreground="White"
+                             Padding="10,5" Margin="0,0,10,0" Cursor="Hand"
+                            Click="btnManageGroups_Click"/>
                     <TextBlock x:Name="txtUserInfo" Text="Пользователь" 
                                FontSize="14" Foreground="White" 
                                VerticalAlignment="Center" Margin="0,0,10,0"/>

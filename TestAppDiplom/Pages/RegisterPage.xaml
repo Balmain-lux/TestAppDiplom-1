@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:TestAppDiplom.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="600"
+      d:DesignHeight="800" d:DesignWidth="600"
       Title="Регистрация">
 
     <Grid Background="#F0F0F0">
@@ -42,10 +42,17 @@
                     <TextBox x:Name="txtEmail" Height="35" Padding="5" 
                              BorderBrush="#CCCCCC" BorderThickness="1"/>
 
-                    <TextBlock Text="Роль:" Margin="0,10,0,5"/>
+                <TextBlock Text="Группа (для студентов):" Margin="0,10,0,5"/>
+                <ComboBox x:Name="cmbGroup" Height="35" 
+                            DisplayMemberPath="GroupName" 
+                            SelectedValuePath="GroupID"
+                            IsEnabled="False"/>
+
+                <TextBlock Text="Роль:" Margin="0,10,0,5"/>
                     <ComboBox x:Name="cmbRole" Height="35" 
                               DisplayMemberPath="RoleName" 
-                              SelectedValuePath="RoleID"/>
+                              SelectedValuePath="RoleID"
+                              />
 
                     <Button x:Name="btnRegister" Content="Зарегистрироваться" Height="40" 
                             Background="#007BFF" Foreground="White" FontSize="16"
