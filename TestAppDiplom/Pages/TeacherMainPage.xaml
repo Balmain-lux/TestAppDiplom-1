@@ -66,7 +66,7 @@
                                 <GridViewColumn Header="Описание" Width="250" 
                                                 DisplayMemberBinding="{Binding Description}"/>
                                 <GridViewColumn Header="Предмет" Width="120" 
-                                                DisplayMemberBinding="{Binding Subject.SubjectName}"/>
+                                                DisplayMemberBinding="{Binding Subjects.SubjectName}"/>
                                 <GridViewColumn Header="Время (мин)" Width="80" 
                                                 DisplayMemberBinding="{Binding TimeLimit}"/>
                                 <GridViewColumn Header="Статус" Width="80">
@@ -133,9 +133,9 @@
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Студент" Width="150" 
-                                                DisplayMemberBinding="{Binding User.LastName}"/>
+                                                DisplayMemberBinding="{Binding Users.LastName}"/>
                                 <GridViewColumn Header="Тест" Width="200" 
-                                                DisplayMemberBinding="{Binding Test.TestName}"/>
+                                                DisplayMemberBinding="{Binding Tests.TestName}"/>
                                 <GridViewColumn Header="Дата" Width="120" 
                                                 DisplayMemberBinding="{Binding EndTime, StringFormat=dd.MM.yyyy}"/>
                                 <GridViewColumn Header="Результат" Width="80" 

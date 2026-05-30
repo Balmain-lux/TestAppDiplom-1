@@ -34,6 +34,7 @@ namespace TestAppDiplom.Pages
 
         }
 
+
         private void LoadUserData()
         {
             if (App.CurrentUser != null)
@@ -63,10 +64,12 @@ namespace TestAppDiplom.Pages
             if (cmbRole.SelectedItem != null)
             {
                 var selectedRole = (DataBase.Roles)cmbRole.SelectedItem;
+                MessageBox.Show($"Выбрана роль: {selectedRole.RoleName}, ID={selectedRole.RoleID}");
                 // Включаем выбор группы только если выбрана роль "Студент" (ID=1)
                 cmbGroup.IsEnabled = selectedRole.RoleID == 1;
                 if (!cmbGroup.IsEnabled)
                 {
+                    
                     cmbGroup.SelectedItem = null;
                 }
             }

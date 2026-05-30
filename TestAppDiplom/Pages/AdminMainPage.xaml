@@ -94,7 +94,7 @@
                                             Margin="5" Padding="8" 
                                             DisplayMemberPath="GroupName" 
                                              SelectedValuePath="GroupID"
-                                            IsEnabled="False"
+                                            IsEnabled="True"
                                             ToolTip="Выберите группу (только для студентов)"/>
 
                                 <StackPanel Grid.Row="1" Grid.Column="3" Orientation="Horizontal" Margin="5,0,0,0">
@@ -137,7 +137,7 @@
                                 <GridViewColumn Header="Email" Width="150" 
                                                 DisplayMemberBinding="{Binding Email}"/>
                                 <GridViewColumn Header="Роль" Width="100" 
-                                                DisplayMemberBinding="{Binding RoleName}"/>
+                                                DisplayMemberBinding="{Binding Roles.RoleName}"/>
                                 <GridViewColumn Header="Группа" Width="100" 
                                                 DisplayMemberBinding="{Binding Groups.GroupName}"/>
                                 <GridViewColumn Header="Статус" Width="80">

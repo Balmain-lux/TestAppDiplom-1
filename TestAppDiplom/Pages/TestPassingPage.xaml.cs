@@ -58,8 +58,9 @@ namespace TestAppDiplom.Pages
 
                 if (!questions.Any())
                 {
-                    MessageBox.Show("В тесте нет вопросов!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                    NavigationService.GoBack();
+                    MessageBox.Show("В тесте нет вопросов! Невозможно пройти тест.", "Ошибка",
+                        MessageBoxButton.OK, MessageBoxImage.Error);
+                    NavigationService?.GoBack();
                     return;
                 }
 
@@ -73,7 +74,7 @@ namespace TestAppDiplom.Pages
                     UserID = App.CurrentUser.UserID,
                     TestID = testId,
                     StartTime = DateTime.Now,
-                    MaxScore = questions.Sum(q => q.Points)
+                    MaxScore = questions.Sum(q => q.Points ?? 1)  
                 };
 
                 MainWindow.db.TestResults.Add(testResult);
