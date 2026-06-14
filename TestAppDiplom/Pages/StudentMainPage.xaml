@@ -67,7 +67,7 @@
                                                            Foreground="Gray" Margin="0,5"/>
                                                 <StackPanel Orientation="Horizontal" Margin="0,5">
                                                     <TextBlock Text="Предмет: " Foreground="Gray"/>
-                                                    <TextBlock Text="{Binding Subject.SubjectName}" 
+                                                    <TextBlock Text="{Binding Subjects.SubjectName}" 
                                                                Foreground="#007BFF" Margin="0,0,15,0"/>
                                                     <TextBlock Text="Время: " Foreground="Gray"/>
                                                     <TextBlock Text="{Binding TimeLimit, StringFormat='{} {0} мин'}" 
